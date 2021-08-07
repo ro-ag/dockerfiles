@@ -5,7 +5,7 @@ WORKDIR /tmp
 RUN  apk update && apk upgrade -U -a && rm -rf /var/cache/apk/*
 RUN  apk update && apk --update add --no-cache ca-certificates cmake wget clang valgrind git openssh openssl \
      vim nano ninja bash pv build-base rust linux-headers python3 py3-pip autoconf automake bzip2 libtool coreutils\
-     curl zip unzip \
+     curl zip unzip make gzip musl-locales\
   && rm -rf /var/cache/apk/*
 
 
@@ -54,14 +54,21 @@ RUN pip3 install --no-cache-dir --trusted-host=pypi.org --trusted-host=files.pyt
 # Get Perl Libraries
 # -----------------------
 RUN apk update && apk --update add --no-cache perl perl-utils perl-app-cpanminus perl-moose \
+  readline readline-dev readline-static perl-inline ncurses perl-term-readkey  \
   perl-datetime perl-time-parsedate perl-spreadsheet-xlsx perl-spreadsheet-parseexcel \
   perl-text-csv_xs perl-text-csv perl-log-log4perl perl-moose perl-moo perl-moosex-types perl-moosex-types-common perl-type-tiny \ 
   perl-namespace-clean perl-module-build perl-module-build-tiny \ 
   perl-namespace-autoclean perl-lwp-protocol-https \
-  && rm -rf /var/cache/apk/*
+  perl-alien-build perl-module-build-xsutil perl-params-util perl-params-validate  perl-b-cow perl-yaml-libyaml yaml-dev yaml-static\
+  yaml perl-http-date perl-http-entity-parser perl-config-autoconf perl-config-tiny perl-test-yaml perl-test-deep perl-algorithm-diff perl-algorithm-diff-xs \
+  perl-spiffy perl-clone perl-io-string perl-class-inspector moreutils perl-list-moreutils perl-xml-tidy perl-dev perl-devel-checklib \
+  rm -rf /var/cache/apk/*
 
 # Install Perl Libraries # bad Perl::Critic IO::Prompter
 # -----------------------
-RUN  cpanm -i -q MCE MCE::Mutex MCE::Signal MCE::Util MCE::Channel MCE::Child MCE::Queue MCE::Relay \
+RUN  cpanm -i -q -n Term::ReadLine::Perl \ 
+  && cpanm -i -q MCE MCE::Mutex MCE::Signal MCE::Util MCE::Channel MCE::Child MCE::Queue MCE::Relay \
      Array::Utils Module::CoreList Perl::Tidy Modern::Perl Deep::Hash::Utils File::Util Task::Kensho::ExcelCSV \
+     CPAN::DistnameInfo Perl::Critic \
+  && cpanm -i q -n IO::Prompter \
      && rm -rf $HOME/.cpanm
