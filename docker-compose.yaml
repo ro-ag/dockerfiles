@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  builder-debian:
+    build: ./debian
+    image: "rodagurto/cdbuild:debian"
+    container_name: debianbld
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+  builder-alpine:
+    build: ./alpine
+    image: "rodagurto/cbuild:alpine"
+    container_name: alpinebld
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+  builder-centos:
+    build: ./centos
+    image: "rodagurto/cbuild:centos"
+    container_name: centosbld
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t

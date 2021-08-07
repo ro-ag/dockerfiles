@@ -64,7 +64,7 @@ RUN pip3 install --no-cache-dir --trusted-host=pypi.org --trusted-host=files.pyt
 RUN rm -rf *
 # Build safeclib Secure memory library
 RUN source /opt/rh/gcc-toolset-10/enable \ 
-    && git clone --depth 1 https://github.com/rurban/safeclib.git \
+    && GIT_SSL_NO_VERIFY=true git clone --depth 1 https://github.com/rurban/safeclib.git \
     && cd safeclib \
     && ./build-aux/autogen.sh \
     && ./configure \ 
@@ -84,6 +84,25 @@ RUN curl -s https://get.sdkman.io | bash \
   && chmod a+x "$SDKMAN_DIR/bin/sdkman-init.sh" \
   && source "$SDKMAN_DIR/bin/sdkman-init.sh" && sdk install kotlin \
   && rm -rf * 
+
+# Grpc Libraries
+RUN source /opt/rh/gcc-toolset-10/enable \
+  && GIT_SSL_NO_VERIFY=true git clone -j 4 --recurse-submodules -b v1.38.0 https://github.com/grpc/grpc \
+  && cd grpc \
+  && cmake -GNinja -DgRPC_INSTALL=ON -DgRPC_BUILD_TESTS=OFF . -Bcmake/build \
+  && cd cmake/build \
+  && ninja -d stats \
+  && ninja install \
+  && cd /tmp/grpc/third_party/abseil-cpp \
+  && cmake -GNinja -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE . -Bcmake/build \
+  && cd cmake/build \
+  && ninja -d stats \
+  && ninja install \
+  && cd /tmp \
+  && rm -rf *
+
+RUN   go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.26 \
+   && go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1 
 
 RUN yum clean all \
   && rm -rf * \
