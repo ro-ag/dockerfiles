@@ -43,6 +43,7 @@ RUN wget --no-check-certificate --progress=bar:force:noscroll https://static.rus
   && ./install.sh --verbose --without=rust-docs\
   && cd .. && rm -rf *
 
+# Perl install
 RUN yum --setopt=tsflags=nodocs install -y perl-File-chdir perl-Array-Utils perl-MCE perl-MCE-tools perl-MCE-Shared perl-Module-CoreList \
     perl-DateTime perl-Time-ParseDate perl-Spreadsheet-XLSX perl-DateTime-Format-Excel perl-Spreadsheet-ParseExcel perl-Excel-Writer-XLSX \
     perl-Text-CSV_XS perl-Text-CSV perl-Log-Log4perl perl-Moose perl-Moo perl-MooseX-Types perl-MooX perl-MooseX-Types-Common perl-Type-Tiny\
