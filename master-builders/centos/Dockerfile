@@ -18,15 +18,10 @@ RUN wget --no-check-certificate --progress=bar:force:noscroll \
 RUN yum --setopt=tsflags=nodocs install -y gcc-toolset-10 gcc-toolset-10-libasan-devel gcc-toolset-10-liblsan-devel \
     gcc-toolset-10-libtsan-devel gcc-toolset-10-libubsan-devel libasan libasan6 liblsan \
     libtsan libubsan libtool pv\
-    && yum clean all
-
-# install clang
-RUN yum --setopt=tsflags=nodocs install -y llvm-toolset  && yum clean all
-
-# build tools
-RUN yum install -y wget python3 python3-pip autoconf automake bzip2 git nano zlib \ 
+    llvm-toolset \
+    wget python3 python3-pip autoconf automake bzip2 git nano zlib \ 
     cpan vim gawk vim-common perl-App-cpanminus perl-Getopt-Long ninja-build valgrind \
-    && yum clean all
+  && yum clean all
 
 # Install Go
 RUN wget --no-check-certificate --progress=bar:force:noscroll https://golang.org/dl/go1.16.6.linux-amd64.tar.gz \
@@ -49,19 +44,17 @@ RUN wget --no-check-certificate --progress=bar:force:noscroll https://static.rus
   && cd .. && rm -rf *
 
 RUN yum --setopt=tsflags=nodocs install -y perl-File-chdir perl-Array-Utils perl-MCE perl-MCE-tools perl-MCE-Shared perl-Module-CoreList \
-  perl-DateTime perl-Time-ParseDate perl-Spreadsheet-XLSX perl-DateTime-Format-Excel perl-Spreadsheet-ParseExcel perl-Excel-Writer-XLSX \
-  perl-Text-CSV_XS perl-Text-CSV perl-Log-Log4perl perl-Moose perl-Moo perl-MooseX-Types perl-MooX perl-MooseX-Types-Common perl-Type-Tiny\
-  perl-Perl-Critic perl-namespace-clean perltidy perl-Module-Build perl-Module-Build-Tiny perl-ExtUtils-CBuilder perl-macros perl-srpm-macros \
-  perl-Modern-Perl perl-namespace-autoclean perl-HTTP-Tiny perl-LWP-Protocol-https perl-IO-All \
+    perl-DateTime perl-Time-ParseDate perl-Spreadsheet-XLSX perl-DateTime-Format-Excel perl-Spreadsheet-ParseExcel perl-Excel-Writer-XLSX \
+    perl-Text-CSV_XS perl-Text-CSV perl-Log-Log4perl perl-Moose perl-Moo perl-MooseX-Types perl-MooX perl-MooseX-Types-Common perl-Type-Tiny\
+    perl-Perl-Critic perl-namespace-clean perltidy perl-Module-Build perl-Module-Build-Tiny perl-ExtUtils-CBuilder perl-macros perl-srpm-macros \
+    perl-Modern-Perl perl-namespace-autoclean perl-HTTP-Tiny perl-LWP-Protocol-https perl-IO-All \
+  && cpanm -i -q Deep::Hash::Utils File::Util IO::Prompter Spreadsheet::Read Log::Any LWP::Simple \
+  && rm -rf $HOME/.cpanm \
   && yum clean all
-
-RUN cpanm -i -q Deep::Hash::Utils File::Util IO::Prompter Spreadsheet::Read Log::Any LWP::Simple \
-  && rm -rf $HOME/.cpanm
 
 # install Conan Client
 RUN pip3 install --no-cache-dir --trusted-host=pypi.org --trusted-host=files.pythonhosted.org conan
 
-RUN rm -rf *
 # Build safeclib Secure memory library
 RUN source /opt/rh/gcc-toolset-10/enable \ 
     && GIT_SSL_NO_VERIFY=true git clone --depth 1 https://github.com/rurban/safeclib.git \
