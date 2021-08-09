@@ -10,12 +10,14 @@ RUN  apk update && apk upgrade -U -a && apk add readline readline-dev readline-s
 # Build Perl
 WORKDIR /tmp
 ENV PATH=/usr/local/perl-534/bin:$PATH
+ARG JOBS=8
 RUN wget --no-check-certificate --progress=bar:force:noscroll http://www.cpan.org/src/5.0/perl-5.34.0.tar.gz\
     && pv -f perl-5.34.0.tar.gz | tar -xz\
     && cd perl-5.34.0\
     && ./Configure -s -des -O -Duse64bitall  -Dinc_version_list=none -Dusethreads -Dprefix=/usr/local/perl-534\
-    && make -j 8\
-    && TEST_JOBS=8 make test_harness\ 
+    && make -j $JOBS
+RUN  cd perl-5.34.0\   
+    && TEST_JOBS=$JOBS make test_harness\ 
     && make install\
     && rm -rf /tmp/*
 
