@@ -13,25 +13,13 @@ RUN  apk update && apk --update add --no-cache ca-certificates cmake wget clang 
 # -----------------------
 COPY --from=golang:rc-alpine /usr/local/go/ /usr/local/go/
 ENV PATH=$PATH:/usr/local/go/bin:/usr/local/bin
+RUN   go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.26 \
+   && go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1 
 
 # Grpc Libraries
 # -----------------------
-RUN git clone -j 4 --recurse-submodules -b v1.38.0 https://github.com/grpc/grpc \
-  && cd grpc \
-  && cmake -GNinja -DgRPC_INSTALL=ON -DgRPC_BUILD_TESTS=OFF . -Bcmake/build \
-  && cd cmake/build \
-  && ninja \
-  && ninja install \
-  && cd /tmp/grpc/third_party/abseil-cpp \
-  && cmake -GNinja -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE . -Bcmake/build \
-  && cd cmake/build \
-  && ninja \
-  && ninja install \
-  && cd /tmp \
-  && rm -rf *
+COPY --from=rodagurto/grpcc:alpine /usr/local/cc-grpc /usr/local/cc-grpc
 
-RUN   go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.26 \
-   && go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1 
 
 # add Azul's public key
 # -----------------------
@@ -51,24 +39,7 @@ RUN bash -c "source $SDKMAN_DIR/bin/sdkman-init.sh && sdk install kotlin" && rm 
 # -----------------------
 RUN pip3 install --no-cache-dir --trusted-host=pypi.org --trusted-host=files.pythonhosted.org conan
 
-# Get Perl Libraries
+# Install Perl Libraries 
 # -----------------------
-RUN apk update && apk --update add --no-cache perl perl-utils perl-app-cpanminus perl-moose \
-  readline readline-dev readline-static perl-inline ncurses perl-term-readkey  \
-  perl-datetime perl-time-parsedate perl-spreadsheet-xlsx perl-spreadsheet-parseexcel \
-  perl-text-csv_xs perl-text-csv perl-log-log4perl perl-moose perl-moo perl-moosex-types perl-moosex-types-common perl-type-tiny \ 
-  perl-namespace-clean perl-module-build perl-module-build-tiny \ 
-  perl-namespace-autoclean perl-lwp-protocol-https \
-  perl-alien-build perl-module-build-xsutil perl-params-util perl-params-validate  perl-b-cow perl-yaml-libyaml yaml-dev yaml-static\
-  yaml perl-http-date perl-http-entity-parser perl-config-autoconf perl-config-tiny perl-test-yaml perl-test-deep perl-algorithm-diff perl-algorithm-diff-xs \
-  perl-spiffy perl-clone perl-io-string perl-class-inspector moreutils perl-list-moreutils perl-xml-tidy perl-dev perl-devel-checklib \
-  rm -rf /var/cache/apk/*
-
-# Install Perl Libraries # bad Perl::Critic IO::Prompter
-# -----------------------
-RUN  cpanm -i -q -n Term::ReadLine::Perl \ 
-  && cpanm -i -q MCE MCE::Mutex MCE::Signal MCE::Util MCE::Channel MCE::Child MCE::Queue MCE::Relay \
-     Array::Utils Module::CoreList Perl::Tidy Modern::Perl Deep::Hash::Utils File::Util Task::Kensho::ExcelCSV \
-     CPAN::DistnameInfo Perl::Critic \
-  && cpanm -i -q -n IO::Prompter \
-     && rm -rf $HOME/.cpanm
+COPY --from=rodagurto/perl534:alpine /usr/local/perl-534 /usr/local/perl-534
+ENV PATH=/usr/local/perl-534/bin:$PATH

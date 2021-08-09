@@ -1,8 +1,21 @@
 version: "3.9"
 services:
-  builder-perl:
-    build: .
-    image: "rodagurto/perl534:alpine"
-    container_name: alpine_perl534
+  builder-perl-debian:
+    build: ./debian
+    image: "rodagurto/perl534:debian"
+    container_name: debian_perl534
     stdin_open: true # docker run -i
-    tty: true        # docker run -t
+    tty: true        # docker run -t    
+  builder-perl-alpine:
+   build: ./alpine
+   image: "rodagurto/perl534:alpine"
+   container_name: alpine_perl534
+   stdin_open: true # docker run -i
+   tty: true        # docker run -t
+  builder-perl-centos:
+    build: ./centos
+    image: "rodagurto/perl534:centos"
+    container_name: centos_perl534
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t 
+# end    

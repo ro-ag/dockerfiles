@@ -94,19 +94,8 @@ RUN wget --no-check-certificate --progress=bar:force:noscroll https://static.rus
   && cd .. && rm -rf *
 
 # Grpc Libraries
-RUN GIT_SSL_NO_VERIFY=true git clone -j 4 --recurse-submodules -b v1.38.0 https://github.com/grpc/grpc \
-  && cd grpc \
-  && cmake -GNinja -DgRPC_INSTALL=ON -DgRPC_BUILD_TESTS=OFF . -Bcmake/build \
-  && cd cmake/build \
-  && ninja -d stats \
-  && ninja install \
-  && cd /tmp/grpc/third_party/abseil-cpp \
-  && cmake -GNinja -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE . -Bcmake/build \
-  && cd cmake/build \
-  && ninja -d stats \
-  && ninja install \
-  && cd /tmp \
-  && rm -rf *
+# -----------------------
+COPY --from=rodagurto/grpcc:debian /usr/local/cc-grpc /usr/local/cc-grpc
 
 RUN   go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.26 \
    && go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1 
