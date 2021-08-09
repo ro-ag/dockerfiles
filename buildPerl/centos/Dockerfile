@@ -28,9 +28,9 @@ RUN curl -L http://cpanmin.us | perl - App::cpanminus\
 ## Update CPAN packages
 RUN cpan-outdated -p | cpanm \
   && rm -rf $HOME/.cpamn \
-  cpanm -i Deep::Hash::Utils File::Util IO::Prompter \
+  && cpanm -i Deep::Hash::Utils File::Util IO::Prompter \
   && rm -rf $HOME/.cpamn
-
+  
 # Needed bundles
 RUN  cpanm -i Task::Kensho::Async  && rm -rf $HOME/.cpamn \
   && cpanm -i Task::Kensho::CLI  && rm -rf $HOME/.cpamn \
