@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  #builder-debian:
+  #  build: ./debian
+  #  image: "rodagurto/grpc:debian"
+  #  container_name: debiangrpc
+  #  stdin_open: true # docker run -i
+  #  tty: true        # docker run -t
+  builder-alpine:
+    build: ./alpine
+    image: "rodagurto/grpcc:alpine"
+    container_name: alpinegrpcc
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+  builder-centos:
+    build: ./centos
+    image: "rodagurto/grpcc:centos"
+    container_name: centosgrpcc
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t

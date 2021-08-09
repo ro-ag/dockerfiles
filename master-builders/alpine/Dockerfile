@@ -70,5 +70,5 @@ RUN  cpanm -i -q -n Term::ReadLine::Perl \
   && cpanm -i -q MCE MCE::Mutex MCE::Signal MCE::Util MCE::Channel MCE::Child MCE::Queue MCE::Relay \
      Array::Utils Module::CoreList Perl::Tidy Modern::Perl Deep::Hash::Utils File::Util Task::Kensho::ExcelCSV \
      CPAN::DistnameInfo Perl::Critic \
-  && cpanm -i q -n IO::Prompter \
+  && cpanm -i -q -n IO::Prompter \
      && rm -rf $HOME/.cpanm
