@@ -476,4 +476,8 @@ RUN cpanm -i -q Thread\
   autodie::Util\
   && rm -rf $HOME/.cpamn
 
-RUN cpanm -i -q Task::Kensho::Async Task::Kensho::CLI Task::Kensho::Dates Task::Kensho::Logging Task::Kensho::OOP && rm -rf $HOME/.cpamn
+RUN cpanm -i Task::Kensho::Async  &&rm -rf $HOME/.cpamn
+RUN cpanm -i -q Task::Kensho::CLI  &&rm -rf $HOME/.cpamn
+RUN cpanm -i -q Task::Kensho::Dates  &&rm -rf $HOME/.cpamn
+RUN cpanm -i -q Task::Kensho::Logging &&rm -rf $HOME/.cpamn
+RUN cpanm -i Task::Kensho::OOP &&rm -rf $HOME/.cpamn

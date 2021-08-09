@@ -10,7 +10,7 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
 ENV LANG en_US.UTF-8 
 
 RUN apt-get update && apt-get install -y -q \
-    git pkg-config wget build-essential zlib1g-dev pkg-config autoconf libtool binutils automake openssl pv libssl-dev \
+    curl git pkg-config wget build-essential zlib1g-dev pkg-config autoconf libtool binutils automake openssl pv libssl-dev \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* 
 
