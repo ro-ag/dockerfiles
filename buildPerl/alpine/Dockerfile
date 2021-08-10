@@ -4,15 +4,16 @@ FROM alpine:latest
 RUN  apk update && apk upgrade -U -a && rm -rf /var/cache/apk/*
 RUN  apk update && apk upgrade -U -a && apk add readline readline-dev readline-static ncurses\
      musl-locales make automake autoconf gzip curl wget git build-base gcc\ 
-     yaml pv bash linux-headers\
+     yaml pv bash linux-header zlib \
   && rm -rf /var/cache/apk/*
 
 # openssl openssl-dev libpthread-stubs 
 
 # Build Perl
 WORKDIR /tmp
+SHELL ["/bin/sh", "-c"]
 ENV PATH=/usr/local/perl-534/bin:$PATH
-ARG JOBS=8
+ARG JOBS=4
 RUN wget --no-check-certificate --progress=bar:force:noscroll http://www.cpan.org/src/5.0/perl-5.34.0.tar.gz\
     && pv -f perl-5.34.0.tar.gz | tar -xz\
     && cd perl-5.34.0\
