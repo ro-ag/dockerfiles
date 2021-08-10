@@ -3,9 +3,11 @@ FROM alpine:latest
 # # Install Toolchains
 RUN  apk update && apk upgrade -U -a && rm -rf /var/cache/apk/*
 RUN  apk update && apk upgrade -U -a && apk add readline readline-dev readline-static ncurses\
-     musl-locales make automake autoconf gzip curl wget git build-base gcc zlib zlib-static zlib-dev\ 
-     yaml pv bash linux-headers openssl openssl-dev libpthread-stubs\
+     musl-locales make automake autoconf gzip curl wget git build-base gcc\ 
+     yaml pv bash linux-headers\
   && rm -rf /var/cache/apk/*
+
+# openssl openssl-dev libpthread-stubs 
 
 # Build Perl
 WORKDIR /tmp
@@ -20,6 +22,7 @@ RUN  cd perl-5.34.0\
     && TEST_JOBS=$JOBS make test_harness\ 
     && make install\
     && rm -rf /tmp/*
+
 
 ## Basic Bundles
 RUN curl -L http://cpanmin.us | perl - App::cpanminus\
