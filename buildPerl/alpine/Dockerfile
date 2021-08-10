@@ -11,7 +11,7 @@ RUN  apk update && apk upgrade -U -a && apk add readline readline-dev readline-s
 
 # Build Perl
 WORKDIR /tmp
-SHELL ["/bin/sh", "-c"]
+
 ENV PATH=/usr/local/perl-534/bin:$PATH
 ARG JOBS=4
 RUN wget --no-check-certificate --progress=bar:force:noscroll http://www.cpan.org/src/5.0/perl-5.34.0.tar.gz\
