@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM debian:11-slim
 
 # Install Toolchains
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y locales 
