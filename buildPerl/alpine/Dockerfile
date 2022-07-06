@@ -1,4 +1,4 @@
-FROM alpine:3.15.4
+FROM alpine:3.16
 
 # # Install Toolchains
 RUN  apk update && apk upgrade -U -a && rm -rf /var/cache/apk/*
